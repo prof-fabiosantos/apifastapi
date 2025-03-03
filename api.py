@@ -2,6 +2,8 @@ from fastapi import FastAPI, HTTPException, Depends
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
+import os
+import uvicorn
 
 # Configuração do banco de dados SQLite
 DATABASE_URL = "sqlite:///./tasks.db"
@@ -72,3 +74,7 @@ def delete_task(task_id: int, db: Session = Depends(get_db)):
     db.delete(task)
     db.commit()
     return {"message": "Tarefa excluída com sucesso"}
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8000))  # Usa a porta do Render ou 8000 como padrão
+    uvicorn.run(app, host="0.0.0.0", port=port)
